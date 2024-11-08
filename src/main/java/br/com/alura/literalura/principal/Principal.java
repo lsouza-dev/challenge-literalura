@@ -27,11 +27,11 @@ public class Principal {
         this.respository = respository;
     }
 
-    public void exibirMenu(){
+    public void exibirMenu() {
 
 
         var opcao = -1;
-        while(opcao != 0) {
+        while (opcao != 0) {
             System.out.println("""
                     ******************
                     Escolha o número de sua opção:
@@ -45,61 +45,59 @@ public class Principal {
                     
                     Digite a opção desejada:
                     """);
-            try{
 
-                opcao = scanner.nextInt();
-                scanner.nextLine();
+            opcao = scanner.nextInt();
+            scanner.nextLine();
 
-                switch (opcao){
-                    case 1:
-                        System.out.println("Digite o título do livro:");
-                        var tituloLivro = scanner.nextLine();
-                        var json = api.consumir(URL+SEARCH+tituloLivro.replace(" ","+").toLowerCase());
-                        var results = conversor.converter(json, DadosResult.class);
+            switch (opcao) {
+                case 1:
+                    System.out.println("Digite o título do livro:");
+                    var tituloLivro = scanner.nextLine();
+                    var json = api.consumir(URL + SEARCH + tituloLivro.replace(" ", "+").toLowerCase());
+                    var results = conversor.converter(json, DadosResult.class);
 
-                        if(!results.results().isEmpty()){
-                            var livroRecord = results.results().getFirst();
-                            var autoresListRecord = livroRecord.autores();
+                    if (!results.results().isEmpty()) {
+                        var livroRecord = results.results().getFirst();
+                        var autoresListRecord = livroRecord.autores();
 
-                            Livros livro = new Livros(livroRecord);
-                            List<Autores> autores = autoresListRecord.stream()
-                                    .map(a -> new Autores(a.nome(),a.anoNascimento(),a.anoFalescimento()))
-                                    .toList();
+                        Livros livro = new Livros(livroRecord);
+                        List<Autores> autores = autoresListRecord.stream()
+                                .map(a -> new Autores(a.nome(), a.anoNascimento(), a.anoFalescimento()))
+                                .toList();
 
-                            autores.forEach(a -> a.setLivro(livro));
-                            livro.setAutores(autores);
-                            respository.save(livro);
-                        }else System.out.println("Nenhum livro foi encontrado com o título inserido.");
+                        autores.forEach(a -> a.setLivro(livro));
+                        livro.setAutores(autores);
+                        respository.save(livro);
+                    } else System.out.println("Nenhum livro foi encontrado com o título inserido.");
 
-                        break;
-                    case 2:
-                        var livros = respository.findAll();
-                        livros.forEach(System.out::println);
-                        break;
-                    case 3:
-                        List<Autores> autores = respository.obterAutores();
-                        autores.forEach(System.out::println);
-                        break;
-                    case 4:
-                        System.out.println("Digite o ano para verificar os autores vivos:");
-                        var ano = scanner.nextInt();
-                        List<Autores> autoresVivos = respository.obterAutoresVivosAteOAno(ano);
-                        autoresVivos.forEach(System.out::println);
-                        break;
-                    case 5:
+                    break;
+                case 2:
+                    var livros = respository.findAll();
+                    livros.forEach(System.out::println);
+                    break;
+                case 3:
+                    List<Autores> autores = respository.obterAutores();
+                    autores.forEach(System.out::println);
+                    break;
+                case 4:
+                    System.out.println("Digite o ano para verificar os autores vivos:");
+                    var ano = scanner.nextInt();
+                    List<Autores> autoresVivos = respository.obterAutoresVivosAteOAno(ano);
+                    autoresVivos.forEach(System.out::println);
+                    break;
+                case 5:
                     System.out.println("Digite o idioma que deseja pesquisar os livros:");
                     var idioma = scanner.nextLine();
                     List<Livros> livrosPorIdioma = respository.obterLivrosPorIdioma(idioma.toLowerCase());
-                    if(livrosPorIdioma.isEmpty()) System.out.println("Não foram encontrados livros com o idioma inserido.");
+                    if (livrosPorIdioma.isEmpty())
+                        System.out.println("Não foram encontrados livros com o idioma inserido.");
                     else livrosPorIdioma.forEach(System.out::println);
-                        break;
-                    case 0:
-                        break;
-                    default:
-                        break;
-                }
-            }catch (InputMismatchException ex){
-                System.out.println("Digite uma opção numérica dentre as disponíveis.");
+                    break;
+                case 0:
+                    break;
+                default:
+                    System.out.println("Opção indisponível.");
+                    break;
             }
         }
     }
