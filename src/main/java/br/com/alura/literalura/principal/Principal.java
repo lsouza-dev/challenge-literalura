@@ -51,21 +51,22 @@ public class Principal {
                 case 1:
                     System.out.println("Digite o título do livro:");
                     var tituloLivro = scanner.nextLine();
-                    var json = api.consumir(URL+SEARCH+tituloLivro.replace(" ","+"));
+                    var json = api.consumir(URL+SEARCH+tituloLivro.replace(" ","+").toLowerCase());
                     var results = conversor.converter(json, DadosResult.class);
 
-                    var livroRecord = results.results().getFirst();
-                    var autoresListRecord = livroRecord.autores();
+                    if(!results.results().isEmpty()){
+                        var livroRecord = results.results().getFirst();
+                        var autoresListRecord = livroRecord.autores();
 
-                    List<Autores> autores = autoresListRecord.stream()
-                            .map(a -> new Autores(a.nome(),a.anoNascimento(),a.anoFalescimento()))
-                            .toList();
+                        Livros livro = new Livros(livroRecord);
+                        List<Autores> autores = autoresListRecord.stream()
+                                .map(a -> new Autores(a.nome(),a.anoNascimento(),a.anoFalescimento()))
+                                .toList();
 
-                    Livros livro = new Livros(livroRecord);
-
-                    autores.forEach(a -> a.setLivro(livro));
-                    livro.setAutores(autores);
-                    respository.save(livro);
+                        autores.forEach(a -> a.setLivro(livro));
+                        livro.setAutores(autores);
+                        respository.save(livro);
+                    }else System.out.println("Nenhum livro foi encontrado com o título inserido.");
 
                     break;
                 case 2:
@@ -73,6 +74,8 @@ public class Principal {
                     livros.forEach(System.out::println);
                     break;
                 case 3:
+                    List<Autores> autores = respository.obterAutores();
+                    autores.forEach(System.out::println);
                     break;
                 case 4:
                     break;

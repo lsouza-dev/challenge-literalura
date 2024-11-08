@@ -16,8 +16,6 @@ public class ConsumiApi {
         request = HttpRequest.newBuilder().uri(URI.create(url)).build();
         try {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println(url);
-            System.out.println(response.statusCode());
             return response.body();
         } catch (IOException e) {
             throw new RuntimeException(e);

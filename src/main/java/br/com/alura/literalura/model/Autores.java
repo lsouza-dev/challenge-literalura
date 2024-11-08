@@ -3,6 +3,7 @@ package br.com.alura.literalura.model;
 import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name="autores")
@@ -67,10 +68,12 @@ public class Autores {
 
     @Override
     public String toString() {
-        return "Id=" + Id +
-                "\tNome=" + nome +
-                "\tAnoNascimento=" + anoNascimento +
-                "\tAnoFalescimento=" + anoFalescimento +
-                "\tLivro=" + livro.getTitulo() ;
+        return String.format(""" 
+            ****** AUTOR ******
+            Nome: %s
+            Ano Nascimento: %d
+            Ano Falescimento: %d
+            *******************
+            """, getNome(), getAnoNascimento(),getAnoFalescimento());
     }
 }

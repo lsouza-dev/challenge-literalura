@@ -22,9 +22,11 @@ public class Livros {
 
     public Livros(DadosLivros livroRecord) {
 
-        this.titulo = String.valueOf(livroRecord.titulo());
-        this.languages = livroRecord.linguagens();
-        this.quantidadeDeDownloads = livroRecord.qtdDownloads();
+        if(livroRecord.titulo() != null){
+            this.titulo = String.valueOf(livroRecord.titulo());
+            this.languages = livroRecord.linguagens();
+            this.quantidadeDeDownloads = livroRecord.qtdDownloads();
+        }else throw new RuntimeException("Não foi encontrado um livro com o título inserido.");
     }
 
     public long getId() {
