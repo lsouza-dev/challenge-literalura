@@ -15,7 +15,7 @@ public class Livros {
     private String titulo;
     @OneToMany(mappedBy = "livro",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<Autores> autores;
-    private List<String> languages;
+    private String linguagem;
     private int quantidadeDeDownloads;
 
     public Livros(){};
@@ -24,7 +24,7 @@ public class Livros {
 
         if(livroRecord.titulo() != null){
             this.titulo = String.valueOf(livroRecord.titulo());
-            this.languages = livroRecord.linguagens();
+            this.linguagem = livroRecord.linguagens().getFirst();
             this.quantidadeDeDownloads = livroRecord.qtdDownloads();
         }else throw new RuntimeException("Não foi encontrado um livro com o título inserido.");
     }
@@ -53,12 +53,12 @@ public class Livros {
         this.autores = autores;
     }
 
-    public List<String> getLanguages() {
-        return languages;
+    public String getLinguagem() {
+        return linguagem;
     }
 
-    public void setLanguages(List<String> languages) {
-        this.languages = languages;
+    public void setLinguagem(String linguagem) {
+        this.linguagem = linguagem;
     }
 
     public int getQuantidadeDeDownloads() {
@@ -75,7 +75,7 @@ public class Livros {
             Título: %s
             Autor: %s
             Idiomas: %s
-            Número de Downloads: %d 
+            Número de Downloads: %d
             ******************* 
-            """, getTitulo(), getAutores().stream().map(Autores::getNome).collect(Collectors.joining(", ")), getLanguages(), getQuantidadeDeDownloads());}
+            """, getTitulo(), getAutores().stream().map(Autores::getNome).collect(Collectors.joining(", ")), getLinguagem(), getQuantidadeDeDownloads());}
 }
